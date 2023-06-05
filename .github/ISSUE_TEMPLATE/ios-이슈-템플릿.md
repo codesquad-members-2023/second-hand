@@ -1,7 +1,7 @@
 ---
 name: iOS 이슈 템플릿
 about: iOS 이슈 템플릿입니다.
-title: "[iOS] 상품 목록을 가져올 수 있다"
+title: "[iOS] :"
 labels: "\U0001F9D1‍\U0001F4BB iOS"
 assignees: harimrim, raindropiOS
 
