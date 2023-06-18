@@ -1,15 +1,12 @@
-package com.secondhand.domain.board.dto;
+package com.secondhand.web.dto.resp;
 
 
-import com.secondhand.domain.board.Status;
-import com.secondhand.util.StatusEnum;
+import com.secondhand.domain.product.Status;
+import com.secondhand.domain.product.CountInfo;
 import lombok.*;
 
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class BoardsDTOResponse {
 
     private String title;

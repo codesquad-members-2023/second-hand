@@ -1,10 +1,8 @@
-package com.secondhand.domain.board.dto;
+package com.secondhand.domain.product;
 
 import lombok.*;
 
 @Getter
-@Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CountInfo {
