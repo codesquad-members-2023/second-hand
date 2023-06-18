@@ -1,35 +1,44 @@
 package team4.codesquad.secondhand.domain.dto;
 
 import lombok.Getter;
-import team4.codesquad.secondhand.constant.Status;
-import team4.codesquad.secondhand.domain.Location;
+import lombok.RequiredArgsConstructor;
 import team4.codesquad.secondhand.domain.Product;
 import team4.codesquad.secondhand.domain.ProductImage;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
-public class ProductDTO {
-
+@RequiredArgsConstructor
+public class ProductDetailDTO {
     private final Integer productId;
+    private final String sellerId;
     private final String title;
+    private final String contents;
     private final int price;
     private final LocalDateTime createdAt;
-    private final Status status;
-    private final Location location;
+    private final String status;
     private final int watchlistCounts;
     private final int chatroomCounts;
-    private final ProductImage mainImage;
+    private final List<ProductImage> images;
+    private final String category;
+    private Integer views;
 
-    public ProductDTO(Product product) {
+    public ProductDetailDTO(Product product){
         this.productId = product.getProductId();
+        this.sellerId = product.getSellerId();
         this.title = product.getTitle();
+        this.contents = product.getContents();
         this.price = product.getPrice();
         this.createdAt = product.getCreatedAt();
-        this.status = product.getStatus();
-        this.location = product.getLocation();
+        this.status = product.getDetailedStatus();
         this.watchlistCounts = product.calculateWatchlistCount();
         this.chatroomCounts = product.calculateChatroomCount();
-        this.mainImage = product.findMainProductImage();
+        this.images = product.getProductImages();
+        this.category = product.getDetailedCategory();
+        this.views = product.getViews();
     }
+
+
+
 }

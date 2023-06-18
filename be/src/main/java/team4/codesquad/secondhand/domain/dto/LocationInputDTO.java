@@ -3,11 +3,11 @@ package team4.codesquad.secondhand.domain.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @AllArgsConstructor
-public class ProductListDTO {
+public class LocationInputDTO {
 
-    private List<ProductDTO> products;
+    private final String district;
+    private final String city;
+    private final String town;
 }

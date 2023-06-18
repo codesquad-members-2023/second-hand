@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class ProductListDTO {
+public class CategoryListDTO {
+    private List<CategoryDTO> category;
 
-    private List<ProductDTO> products;
 }
