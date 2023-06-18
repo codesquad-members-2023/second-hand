@@ -8,13 +8,16 @@
 import UIKit
 
 class SignInViewController: UIViewController {
+    let separatorViewUnderNavigationBar: SeparatorView = SeparatorView()
+    let idInputView: InputView = InputView()
+    let separatorView: SeparatorView = SeparatorView()
+    private let topBottomPadding: CGFloat = 80/852
+    
     let stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
         return stack
     }()
-    
-    let idInputView: InputView = InputView()
     let loginButton: OrangeButton = OrangeButton()
     let signUpButton: UIButton = UIButton()
     
@@ -22,14 +25,45 @@ class SignInViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.configureNavigationBar()
+        self.configureSeparatorViewUnderNavigationBar()
         self.configureIdInputView()
+        self.configureSeparatorView()
         self.configureLoginSignUpButton()
         
         self.signUpButton.addTarget(self, action: #selector(signUpButtonTouched), for: .touchUpInside)
     }
     
+    private func configureLoginButtonAction() {
+        self.loginButton.addTarget(self, action: #selector(loginButtonAction), for: .touchUpInside)
+    }
+    
+    @objc func loginButtonAction() {
+        let clientId: String = "ClientId"
+        let urlStr = "https://github.com/login/oauth/authorize?client_id=\(clientId)"
+        guard let url = URL(string: urlStr) else { return }
+        UIApplication.shared.open(url)
+    }
+    
+    @objc func signUpButtonTouched() {
+        let signUpViewController = SignUpViewController()
+        self.present(UINavigationController(rootViewController: signUpViewController), animated: true)
+    }
+    
     private func configureNavigationBar() {
         self.navigationItem.title = "내 계정"
+    }
+}
+
+// MARK: Autolayout
+extension SignInViewController {
+    private func configureSeparatorViewUnderNavigationBar() {
+        self.view.addSubview(separatorViewUnderNavigationBar)
+        self.separatorViewUnderNavigationBar.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.separatorViewUnderNavigationBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+        ])
+        self.setSeparatorViewAdditionalAutolayout(separatorViewUnderNavigationBar)
+        self.separatorViewUnderNavigationBar.configure()
     }
     
     private func configureIdInputView() {
@@ -38,20 +72,33 @@ class SignInViewController: UIViewController {
         
         self.idInputView.translatesAutoresizingMaskIntoConstraints = false
         let height = self.view.frame.height
-        let padding = (60/height) * height
+        let padding = self.topBottomPadding * height
         
         NSLayoutConstraint.activate([
-            idInputView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: padding)
+            idInputView.topAnchor.constraint(equalTo: separatorViewUnderNavigationBar.bottomAnchor, constant: padding),
+            idInputView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor)
         ])
+    }
+    
+    private func configureSeparatorView() {
+        self.view.addSubview(separatorView)
+        self.separatorView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.separatorView.topAnchor.constraint(equalTo: idInputView.bottomAnchor, constant: SeparatorView.interval),
+        ])
+        self.setSeparatorViewAdditionalAutolayout(separatorView)
+        self.separatorView.configure()
     }
     
     private func configureLoginSignUpButton() {
         let height = self.view.frame.height
-        let padding = (60/height) * height
+        let padding = self.topBottomPadding * height
         
         self.loginButton.setTitle("로그인", for: .normal)
         self.signUpButton.setTitle("회원가입", for: .normal)
         self.signUpButton.setTitleColor(.black, for: .normal)
+        
+        self.loginButton.addTarget(self, action: #selector(loginButtonAction), for: .touchUpInside)
         
         self.view.addSubview(self.stackView)
         
@@ -67,118 +114,12 @@ class SignInViewController: UIViewController {
         ])
     }
     
-    private func configureLoginButtonAction() {
-        self.loginButton.addTarget(self, action: #selector(loginButtonAction), for: .touchUpInside)
-    }
-    
-    @objc func loginButtonAction() {
-        // 로그인 버튼 터치시 수행할 동작
-    }
-    
-    @objc func signUpButtonTouched() {
-        let signUpViewController = SignUpViewController()
-        self.present(signUpViewController, animated: true)
-    }
-}
-
-// TODO: 파일 분리 예정 - 1
-class InputView: UIView {
-    
-    let horizontalStackView: UIStackView = {
-        let uiStackView = UIStackView()
-        uiStackView.axis = .horizontal
-        uiStackView.spacing = 8
-        uiStackView.alignment = .fill
-        uiStackView.layoutMargins = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
-        uiStackView.isLayoutMarginsRelativeArrangement = true
-        
-        
-        uiStackView.translatesAutoresizingMaskIntoConstraints = false
-        return uiStackView
-    }()
-    
-    let textLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        return label
-    }()
-    
-    let inputField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        
-        return textField
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setup()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        self.setup()
-    }
-    
-    
-    func configureText(labelText: String, textFieldPlaceholder: String) {
-        self.textLabel.text = labelText
-        self.inputField.placeholder = textFieldPlaceholder
-    }
-    
-    private func setup() {
-        self.configureLayout()
-    }
-    
-    private func configureLayout() {
-        self.addSubview(self.horizontalStackView)
-        self.horizontalStackView.addArrangedSubview(textLabel)
-        self.horizontalStackView.addArrangedSubview(inputField)
-
+    // SeparatorView autolayout method
+    private func setSeparatorViewAdditionalAutolayout(_ separatorView: SeparatorView) {
         NSLayoutConstraint.activate([
-            textLabel.widthAnchor.constraint(equalToConstant: 100),
-            horizontalStackView.topAnchor.constraint(equalTo: self.topAnchor),
-            horizontalStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            horizontalStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            horizontalStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            separatorView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: SeparatorView.height)
         ])
     }
-}
-
-// TODO: 파일 분리 예정 - 2
-class OrangeButton: UIButton {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setup()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        self.setup()
-    }
-    
-    private func setup() {
-        self.setColor()
-        self.configureLayout()
-        self.configureShape()
-    }
-    
-    private func setColor() {
-        self.backgroundColor = UIColor(named: "orange")
-    }
-    
-    private func configureLayout() {
-        self.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.widthAnchor.constraint(equalToConstant: 330),
-            self.heightAnchor.constraint(equalToConstant: 40)
-        ])
-    }
-    
-    private func configureShape() {
-        self.layer.cornerRadius = 10
-    }
-    
 }
