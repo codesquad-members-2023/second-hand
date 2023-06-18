@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { ERROR_MESSAGE } from '@Constants/index';
 
-const useFetch = (url: string) => {
-  const [data, setData] = useState({});
+const useFetch = <T,>(url: string) => {
+  const [data, setData] = useState<T>();
   const [status, setStatus] = useState<'loading' | 'error' | 'success'>(
     'loading',
   );
@@ -39,7 +39,7 @@ const useFetch = (url: string) => {
       setStatus('success');
     } catch (error) {
       setStatus('error');
-      if (error instanceof Error) setErrorMessage(error.message);
+      if (error instanceof Error) setErrorMessage(ERROR_MESSAGE.default);
     }
   };
 

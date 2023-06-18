@@ -1,8 +1,8 @@
 import { FC, ReactElement } from 'react';
 
-import { palette } from '@Styles/color';
-
 import icons from '@Assets/index';
+
+import { palette } from '@Styles/color';
 
 interface IconProps {
   iconType: keyof typeof icons;
@@ -12,13 +12,13 @@ interface IconProps {
   onClick?: () => void;
 }
 
-export const Icon: FC<IconProps> = ({
+export const Icon = ({
   iconType = 'slider',
   width = 16,
   height = width,
   fill = palette.gray50,
   onClick,
-}): ReactElement => {
+}: IconProps): ReactElement => {
   const IconSvg = icons[iconType];
 
   return (

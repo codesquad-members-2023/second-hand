@@ -5,8 +5,12 @@
       "@Constants/*": ["./constants/*"],
       "@Assets/*": ["./assets/*"],
       "@Styles/*": ["./styles/*"],
+      "@Hooks/*": ["./hooks/*"],
       "@Utils/*": ["./utils/*"],
-      "@Components/*": ["./components/*"]
+      "@Types/*": ["./types/*"],
+      "@Common/*": ["./common/*"],
+      "@Components/*": ["./components/*"],
+      "@Pages/*": ["./pages/*"]
     }
   }
 }

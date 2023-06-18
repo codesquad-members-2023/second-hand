@@ -37,15 +37,6 @@
           },
           {
             "pattern": "@Constants/*",
-            "group": "external",
-            "position": "before"
-          },
-            "pattern": "@Styles/*",
-            "group": "internal",
-            "position": "after"
-          },
-          {
-            "pattern": "@Utils/*",
             "group": "internal",
             "position": "after"
           },
@@ -55,7 +46,42 @@
             "position": "after"
           },
           {
+            "pattern": "@Styles/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@Hooks/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@Utils/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
             "pattern": "@Components/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@Hooks/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@Common/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@Types/*",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@Pages/*",
             "group": "internal",
             "position": "after"
           }
