@@ -1,4 +1,4 @@
-package com.secondhand.post.repository;
+package com.secondhand.post.repository.postmeta;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.secondhand.post.entity.QPostMeta.postMeta;
@@ -19,8 +18,8 @@ public class PostMetaRepositoryImpl implements PostMetaRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    public PostMetaRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
+    public PostMetaRepositoryImpl(JPAQueryFactory queryFactory) {
+        this.queryFactory = queryFactory;
     }
 
     @Override
