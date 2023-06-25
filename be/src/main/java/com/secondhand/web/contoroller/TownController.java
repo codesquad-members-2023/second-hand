@@ -1,27 +1,26 @@
 package com.secondhand.web.contoroller;
 
-import com.secondhand.domain.town.TownService;
-import com.secondhand.util.Message;
-import com.secondhand.web.dto.resp.MemberLoginResponseDTO;
-import com.secondhand.web.dto.resp.MemberTownInfoResponseDTO;
-import com.secondhand.web.dto.resp.TownDTO;
+import com.secondhand.login.LoginCheck;
+import com.secondhand.login.LoginValue;
+import com.secondhand.service.TownService;
+import com.secondhand.util.BasicResponse;
+import com.secondhand.web.dto.requset.TownRegisterRequest;
+import com.secondhand.web.dto.requset.TownRequest;
+import com.secondhand.web.dto.response.TownResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/towns")
 @RequiredArgsConstructor
 public class TownController {
 
-    private final Logger log = LoggerFactory.getLogger(TownController.class);
     private final TownService townService;
 
     @Operation(
@@ -29,41 +28,19 @@ public class TownController {
             tags = "towns",
             description = "사용자는 전체 동네 목록을 볼수 있다.."
     )
+    @LoginCheck
     @GetMapping
-    public ResponseEntity<Message<List<TownDTO>>> read() {
-        List<TownDTO> townList = townService.findByAll();
+    public BasicResponse<List<TownResponse>> read() {
+        List<TownResponse> townList = townService.findByAll();
         log.debug("전체 동네 목록을 가져온다 = {}", townList);
 
-        Message message = Message.builder()
+        return BasicResponse.<List<TownResponse>>builder()
+                .message("성공")
                 .success(true)
-                .message("")
-                .apiStatus(20000)
-                .httpStatus(HttpStatus.OK)
                 .data(townList)
-                .build();
-
-        return ResponseEntity.ok(message);
-    }
-
-
-    //TODO : 등록을 숫자로가지고한다? 수정필요
-    @Operation(
-            summary = "상용자 동네 등록",
-            tags = "towns",
-            description = "사용자는 동네를 등록할 수있다."
-    )
-    @PostMapping
-    public ResponseEntity<Message<MemberLoginResponseDTO>> registerTown(@RequestBody long townId) {
-        townService.save(townId);
-
-        Message message = Message.builder()
-                .success(true)
-                .message("")
-                .apiStatus(20000)
                 .httpStatus(HttpStatus.OK)
+                .apiStatus(20000)
                 .build();
-
-        return ResponseEntity.ok(message);
     }
 
     @Operation(
@@ -71,39 +48,67 @@ public class TownController {
             tags = "towns",
             description = "사용자는 특정 동네를 가져올 수있다."
     )
+    @LoginCheck
     @GetMapping("/member")
-    public ResponseEntity<Message<MemberTownInfoResponseDTO>> viewMember() {
-        MemberTownInfoResponseDTO  memberTownInfoResponseDTO = townService.findByLoginId();
-        log.debug("사용자가 등록한 동네를 가져올수 있다  = {}", memberTownInfoResponseDTO);
+    public BasicResponse<List<TownResponse>> readRegisterByMember(@LoginValue long userId) {
+        List<TownResponse> townDetail = townService.findTownDetail(userId);
+        log.debug("사용자가 등록한 동네를 가져올수 있다  = {}", townDetail);
 
-        Message message = Message.builder()
+        return BasicResponse.<List<TownResponse>>builder()
                 .success(true)
                 .message("")
                 .apiStatus(20000)
                 .httpStatus(HttpStatus.OK)
-                .data(memberTownInfoResponseDTO)
+                .data(townDetail)
                 .build();
+    }
 
-        return ResponseEntity.ok(message);
+    //TODO : 등록을 숫자로가지고한다? 수정필요
+    @Operation(
+            summary = "사용자의 처음 동네 등록",
+            tags = "members",
+            description = "사용자의 화원가입할 때 메인, 서브  동네를 등록할 수있다."
+    )
+    @LoginCheck
+    @PostMapping
+    public BasicResponse registerTown(@LoginValue long userId,
+                                      @RequestBody TownRegisterRequest request) {
+
+        if (request.getTownId() == null) {
+            throw new IllegalArgumentException("필수 지역 정보 없음");
+        }
+
+        townService.save(userId, request.getTownId());
+
+        return BasicResponse.builder()
+                .success(true)
+                .message("사용자의 처음 동네 등록")
+                .apiStatus(20000)
+                .httpStatus(HttpStatus.OK)
+                .build();
     }
 
     @Operation(
-            summary = "동네 삭제",
-            tags = "board",
-            description = "사용자는 동네를 삭제할 수 있다."
+            summary = "사용자의 동네 수정",
+            tags = "members",
+            description = "사용자의 메인, 서브 동네를 수정할 수 있다."
     )
-    @DeleteMapping("/townId")
-    public ResponseEntity<Message> delete(@PathVariable long townId) {
-        townService.delete(townId);
-        log.debug("사용자는 특정 동네를 삭제 할수 있다. = {}");
+    @LoginCheck
+    @PatchMapping
+    public BasicResponse updateTown(@LoginValue long userId,
+                                    @RequestBody TownRequest townRequest) {
 
-        Message message = Message.builder()
+        if (townRequest.getMainTownId() == null) {
+            throw new IllegalArgumentException("필수 지역 정보 없음");
+        }
+
+        townService.update(userId, townRequest);
+
+        return BasicResponse.builder()
                 .success(true)
-                .message("")
+                .message("사용자의 동네 수정")
                 .apiStatus(20000)
                 .httpStatus(HttpStatus.OK)
                 .build();
-
-        return ResponseEntity.ok(message);
     }
 }

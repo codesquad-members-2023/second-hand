@@ -1,22 +1,22 @@
 package com.secondhand.web.contoroller;
 
-import com.secondhand.domain.member.MemberService;
-import com.secondhand.domain.town.TownService;
-import com.secondhand.util.Message;
-import com.secondhand.web.dto.resp.MemberLoginResponseDTO;
+import com.secondhand.login.LoginCheck;
+import com.secondhand.login.LoginValue;
+import com.secondhand.service.MemberResponse;
+import com.secondhand.service.MemberService;
+import com.secondhand.service.TownService;
+import com.secondhand.util.BasicResponse;
+import com.secondhand.web.dto.requset.RequestCode;
+import com.secondhand.web.dto.response.MemberLoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -24,44 +24,62 @@ public class MemberController {
 
     private final MemberService memberService;
     private final TownService townService;
-    private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     @Operation(
             summary = "깃허브 로그인",
-            tags = "member",
+            tags = "members",
             description = "사용자 깃허브를 통한 로그인"
     )
-    @GetMapping("/auth/login")
-    public ResponseEntity<Message<MemberLoginResponseDTO>> login(@RequestParam String code) throws IOException, InterruptedException {
-        logger.debug("프론트로 부터 받은 코드 = {}", code);
-        MemberLoginResponseDTO memberResponseDTO = memberService.login(code);
+    @PostMapping("/auth/login")
+    public BasicResponse<MemberLoginResponse> login(@RequestBody RequestCode code) throws IOException, InterruptedException {
+        log.debug("프론트로 부터 받은 코드 = {}", code);
+        MemberLoginResponse memberResponseDTO = memberService.login(code.getAuthorizationCode());
 
-        Message message = Message.builder()
+        return BasicResponse.<MemberLoginResponse>builder()
                 .success(true)
-                .message("")
+                .message("로그인")
                 .apiStatus(20000)
                 .httpStatus(HttpStatus.OK)
                 .data(memberResponseDTO)
                 .build();
-
-        return ResponseEntity.ok(message);
     }
 
     @Operation(
             summary = "로그아웃",
-            tags = "member",
+            tags = "members",
             description = "사용자 로그아웃."
     )
+    @LoginCheck
     @GetMapping("/auth/logout")
-    public ResponseEntity<Message<MemberLoginResponseDTO>> logout() {
+    public BasicResponse logout(@LoginValue long userId) {
+        log.debug("로그아웃 요청");
+        memberService.logout(userId);
 
-        Message message = Message.builder()
+        return BasicResponse.builder()
                 .success(true)
-                .message("")
+                .message("로그아웃")
                 .apiStatus(20000)
                 .httpStatus(HttpStatus.OK)
                 .build();
+    }
 
-        return ResponseEntity.ok(message);
+    @Operation(
+            summary = "사용자의 정보를 가져온다",
+            tags = "members",
+            description = "사용자의 id를 통해 사용자 정보를 가져온다."
+    )
+    @LoginCheck
+    @GetMapping("/members")
+    public BasicResponse<MemberResponse> info(@LoginValue long userId) {
+        log.debug("사용자 id = {} ", userId);
+        MemberResponse userInfo = memberService.getUserInfo(userId);
+
+        return BasicResponse.<MemberResponse>builder()
+                .success(true)
+                .message("사용자 정보를 가져온다")
+                .apiStatus(20000)
+                .httpStatus(HttpStatus.OK)
+                .data(userInfo)
+                .build();
     }
 }
