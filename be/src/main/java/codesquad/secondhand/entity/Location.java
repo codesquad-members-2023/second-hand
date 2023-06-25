@@ -1,13 +1,14 @@
-package codesquad.secondhand.domain;
+package codesquad.secondhand.entity;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
 @Table(name = "location")
+@NoArgsConstructor
 public class Location {
 
     @Id
@@ -24,4 +25,10 @@ public class Location {
     @Column(name = "town", nullable = false)
     private String town;
 
+    public Location(Long locationIdx, String city, String district, String town) {
+        this.locationIdx = locationIdx;
+        this.city = city;
+        this.district = district;
+        this.town = town;
+    }
 }

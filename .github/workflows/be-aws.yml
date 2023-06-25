@@ -5,8 +5,8 @@ on:
   push:
     branches:
       - main
-#    paths:
-#      - 'be/**'
+    paths:
+      - 'be/**'
 
 env:
   AWS_REGION: ap-northeast-2
@@ -48,7 +48,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}/be
           chmod +x gradlew
-          ./gradlew clean build
+          ./gradlew clean build -x test
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

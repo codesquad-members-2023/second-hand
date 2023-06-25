@@ -1,0 +1,39 @@
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+aws:
+  credentials:
+    access-key: ENC(AXGXcyGl8zSV0o1f2tjKJmyaMN75vjtNm+PGZU74exk=)
+    secret-key: ENC(D/7U1Y5JXDAYhq1PZfSzDFPooxrVEIfsz6B6HE7g1FNpqubJyKuqUhyEOULGbBNFxNm4NZkd6kk=)
+    region: ap-northeast-2
+  s3:
+    bucket: ENC(DkFZypoaguNPKzi+G7VWxVUZb7uYM/xPo/SBS+h9xL64oEIj/MN7Hw==)
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  datasource:
+    url: ENC(QL46yp5WEJn2Q7FCTU8xvWU6TnOM+sR8VRfReuqouQjAXalDDfdKht1+C3vyMiIOLL8sqjVpSVGI8ii1DXC5O9LGr49iljmCfXmJzjvBpUkv2lGY1MDC/i4+RDR6qK1ciIinZXZlhNE=)
+    username: ENC(L0kzYFpSX3w8Kp4vGkamFw==)
+    password: ENC(+l0rNkHYeHjfoTmkxYate/tZxZ+6B/KM)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId:
+            clientSecret:
+            redirectUri:
+    user:
+      name:
+      password:
+security:
+  jwt:
+    token:
+      secret-key: ENC(splgClZ0/GF97Phs3Y+wyoKe0+/02DauHDVHznqHY6L7TGcHylZGXj6ljNvaBJqEMekM68X47uOZeYTZT90tUQ==)
+      expire-length: ENC(S3cUIoNjjoBYhjMbWum1oA==)

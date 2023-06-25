@@ -1,6 +1,6 @@
 package codesquad.secondhand.controller;
 
-import codesquad.secondhand.dto.ResponseDto;
+import codesquad.secondhand.dto.ResponseListDto;
 import codesquad.secondhand.dto.category.CategoryDto;
 import codesquad.secondhand.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -12,21 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static codesquad.secondhand.dto.StatusCode.RESPONSE_SUCCESS;
+import static codesquad.secondhand.exception.code.CommonResponseCode.RESPONSE_SUCCESS;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/category")
+@RequestMapping("/api/category")
 public class CategoryController {
 
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<ResponseDto<List<CategoryDto>>> showCategories() {
+    public ResponseEntity<ResponseListDto<CategoryDto>> showCategories() {
         log.info("[CategoryController.showCategories]");
         List<CategoryDto> categoryDtos = categoryService.showAllCategories();
-        return ResponseEntity.ok(ResponseDto.of(RESPONSE_SUCCESS, categoryDtos));
+        return ResponseEntity.ok(ResponseListDto.of(RESPONSE_SUCCESS, categoryDtos));
     }
 
 }
