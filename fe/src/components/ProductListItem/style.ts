@@ -6,6 +6,8 @@ const Img = styled.img`
 
   border: 1px solid ${({ theme }) => theme.colors.neutral.border.default};
   border-radius: 8px;
+
+  object-fit: cover;
 `;
 
 const Title = styled.header`
@@ -16,9 +18,9 @@ const Title = styled.header`
 `;
 
 const LocationAndTime = styled.span`
-  font-size: ${({ theme }) => theme.fonts.fontnote.fontSize};
-  font-weight: ${({ theme }) => theme.fonts.fontnote.fontWeight};
-  line-height: ${({ theme }) => theme.fonts.fontnote.lineHeight};
+  font-size: ${({ theme }) => theme.fonts.footnote.fontSize};
+  font-weight: ${({ theme }) => theme.fonts.footnote.fontWeight};
+  line-height: ${({ theme }) => theme.fonts.footnote.lineHeight};
   color: ${({ theme }) => theme.colors.neutral.text.weak};
 `;
 
