@@ -13,6 +13,7 @@ export const Button = styled.button<ButtonStyleProps>`
       if (size === 'S') {
         return css`
           width: fit-content;
+          border: 1px solid ${({ theme }) => theme.color.colors.neutralOverlay};
           height: 4vh;
           padding: 8px 16px;
           ${theme.font.fontType.caption1};
@@ -21,6 +22,7 @@ export const Button = styled.button<ButtonStyleProps>`
       if (size === 'M') {
         return css`
           width: 177.5px;
+          border: 1px solid ${({ theme }) => theme.color.colors.neutralOverlay};
           height: 5.5vh;
           padding: 8px 16px;
           ${theme.font.fontType.callOut};
@@ -28,10 +30,11 @@ export const Button = styled.button<ButtonStyleProps>`
       }
       if (size === 'L') {
         return css`
-          width: fit-content;
+          width: 90vw;
+          border: none;
           height: 6.5vh;
           padding: 8px 16px;
-          ${theme.font.fontType.headLine};
+          ${theme.font.fontType.subHead};
         `;
       }
     }
@@ -61,13 +64,15 @@ export const Button = styled.button<ButtonStyleProps>`
       if (size === 'S') {
         return css`
           width: fit-content;
-          height: 2.75vh;
+          border: 1px solid ${({ theme }) => theme.color.colors.neutralOverlay};
+          height: 3.5vh;
           ${theme.font.fontType.caption1};
         `;
       }
       if (size === 'M') {
         return css`
           width: fit-content;
+          border: 1px solid ${({ theme }) => theme.color.colors.neutralOverlay};
           height: 4vh;
           ${theme.font.fontType.callOut};
         `;
@@ -75,6 +80,7 @@ export const Button = styled.button<ButtonStyleProps>`
       if (size === 'L') {
         return css`
           width: fit-content;
+          border: 1px solid ${({ theme }) => theme.color.colors.neutralOverlay};
           height: 4.25vh;
           ${theme.font.fontType.callout};
         `;
@@ -86,7 +92,7 @@ export const Button = styled.button<ButtonStyleProps>`
     buttonState === 'default'
       ? css`
           color: ${theme.color.colors.accentTextWeak};
-          background-color: ${theme.color.colors.neutralBorder};
+          background-color: ${theme.color.colors.systemBackgroundWeak};
         `
       : css`
           color: ${theme.color.colors.accentText};
@@ -95,13 +101,14 @@ export const Button = styled.button<ButtonStyleProps>`
 
   display: flex;
   align-items: center;
+  gap: 3px;
   ${({ textAlign }) => css`
     justify-content: ${textAlign === 'center' ? 'center' : 'space-between'};
     ${textAlign === 'center' && `gap: 4px`};
   `}
   ${({ buttonType }) => css`
+    ${buttonType === 'circle' && 'border: none'};
     border-radius: ${buttonType === 'rectangle' ? '8px' : '50px'};
     padding: ${buttonType !== 'circle' && '8px 16px'};
   `};
-  border: none;
 `;

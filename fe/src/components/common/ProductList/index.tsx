@@ -1,6 +1,9 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
+
+import { END_POINT } from '@Constants/endpoint';
 
 import usePullToRefresh from '@Hooks/useFullToRefresh';
+import useInfiniteScroll from '@Hooks/useInfiniteScroll';
 
 import { Product, ProductResponseData } from '@Types/index';
 
@@ -14,26 +17,39 @@ interface ProductListProps {
 }
 
 export const ProductList = ({ itemData }: ProductListProps) => {
-  const [Products, setProducts] = useState<Product[] | undefined | null>(
-    itemData,
-  );
+  const productListRef = useRef<HTMLDivElement>(null);
+  const [Products, setProducts] = useState<Product[]>(itemData);
+
   const { refreshing, distance, status, errorMessage, refreshedData } =
     usePullToRefresh<ProductResponseData>(
-      'http://3.38.73.117:8080/api/products?page=0&size=20',
+      `${END_POINT.products}?page=0&size=10`,
     );
+  const { scrolledData } = useInfiniteScroll<ProductResponseData>(
+    END_POINT.products,
+    productListRef,
+  );
 
   useEffect(() => {
-    if (refreshedData !== undefined) {
+    if (refreshedData) {
       setProducts(refreshedData?.data.products);
     }
   }, [refreshedData]);
 
+  useEffect(() => {
+    if (scrolledData) {
+      setProducts((prevProducts) => [
+        ...prevProducts,
+        ...scrolledData.data.products,
+      ]);
+    }
+  }, [scrolledData]);
+
   return (
-    <S.Layout>
+    <S.Layout ref={productListRef}>
       <S.TopBox />
       {refreshing && (
         <S.SpinnerBox distanceY={distance}>
-          <Spinner />
+          <Spinner isDynamic={true} />
         </S.SpinnerBox>
       )}
       {status === 'error' && <NotFound errorMessage={errorMessage} />}
