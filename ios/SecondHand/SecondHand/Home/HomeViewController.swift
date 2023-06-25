@@ -16,6 +16,7 @@ class HomeViewController: UIViewController {
         
         self.view.addSubview(self.tableView)
         
+        self.configureNavigationBar()
         self.configureTableView()
         self.setTableViewLayout()
     }
@@ -36,6 +37,7 @@ class HomeViewController: UIViewController {
         
         self.tableView.register(ProductTableViewCell.self, forCellReuseIdentifier: ProductTableViewCell.identifier)
     }
+
 }
 
 // MARK: UITableViewDataSource
@@ -60,4 +62,75 @@ extension HomeViewController: UITableViewDelegate {
         let heightAspect: CGFloat = 120.0/393.0
         return heightAspect * self.view.frame.width
     }
+}
+
+// MARK: NavigationBar
+extension HomeViewController {
+    private func configureNavigationBar() {
+        self.addDongSelectButton()
+        self.addHamburgerMenuButton()
+    }
+    
+    private func addDongSelectButton() {
+        let button = UIButton(type: .custom)
+        button.setTitle("역삼1동", for: .normal)
+        button.titleLabel?.font = FontStyle.headline
+        button.setTitleColor(UIColor(named: "black"), for: .normal)
+        
+        let dong1 = UIAction(title: "역삼1동") {_ in
+            
+            
+       }
+
+       let configureDongButton = UIAction(title: "내 동네 설정하기") {_ in
+           let townSettingViewController = TownSettingViewController()
+           self.present(UINavigationController(rootViewController: townSettingViewController), animated: true)
+           
+       }
+
+       let menu = UIMenu(title: "", options: .displayInline, children: [dong1, configureDongButton])
+
+        button.menu = menu
+        button.showsMenuAsPrimaryAction = true
+
+        let barButtonItem = UIBarButtonItem(customView: button)
+        
+        self.navigationItem.leftBarButtonItem = barButtonItem
+    }
+    
+    private func addHamburgerMenuButton() {
+        let hamburgerImage = UIImage(systemName: "line.3.horizontal")
+        let color = UIColor(named: "black") ?? .black
+        let barButton = UIBarButtonItem(image: hamburgerImage, style: .plain, target: self, action: nil)
+        barButton.tintColor = color
+        
+        self.navigationItem.rightBarButtonItem = barButton
+    }
+}
+
+/// 임시 DTO이자 Combine 대상.
+/// 유저 정보를 담아 관리할 수도 있을 것으로 기대
+class User {
+    /// 임시용
+    static let shared: User = {
+        let user = User()
+        let defaultDong = Dong(name: "역삼1동")
+        user.addDong(defaultDong)
+        return user
+    }()
+    
+    /// 차후 userInfo 타입 선언뒤, nil 값이 아니면 true 반환하여 판별해도 될 듯.
+    var isSignedIn: Bool = true
+    var selectedDong: Dong? {
+        return dongs[0]
+    }
+    private var dongs: [Dong] = []
+    
+    func addDong(_ dong: Dong) {
+        dongs.append(dong)
+    }
+}
+
+struct Dong {
+    let name: String
 }
