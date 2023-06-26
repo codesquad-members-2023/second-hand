@@ -9,13 +9,22 @@ import UIKit
 
 final class HomeViewController: UIViewController {
     private let collectionView = ProductListCollectionView()
-    private lazy var dataSource: ProductListDataSource? = ProductListDataSource(collectionView)
+    private lazy var dataSource: ProductListDataSource = ProductListDataSource(collectionView)
+    
+    let manager = NetworkManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavigationBar()
         setLayout()
         applyUpdatedSnapshot()
+        
+//        get()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
     }
     
     private func setLayout() {
@@ -35,7 +44,7 @@ final class HomeViewController: UIViewController {
         let products = (1...100).map { ProductListItem.product($0) }
         snapshot.appendItems(products, toSection: .product)
         if true { snapshot.appendItems([.load], toSection: .load) }
-        dataSource?.apply(snapshot, animatingDifferences: true)
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
     
     private let town = "역삼1동"
@@ -70,5 +79,8 @@ final class HomeViewController: UIViewController {
     @objc func moveToCategory() {
         let nextViewController = CategoryViewController()
         self.navigationController?.pushViewController(nextViewController, animated: true)
+    }
+    
+    private func get() {
     }
 }
