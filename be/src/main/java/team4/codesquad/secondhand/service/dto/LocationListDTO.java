@@ -1,7 +1,8 @@
-package team4.codesquad.secondhand.domain.dto;
+package team4.codesquad.secondhand.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import team4.codesquad.secondhand.domain.Location;
 
 import java.util.List;
 
@@ -9,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 public class LocationListDTO {
 
-    private List<LocationDTO> locations;
+    private List<Location> locations;
 }
